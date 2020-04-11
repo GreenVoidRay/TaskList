@@ -6,25 +6,27 @@ let tempTasks;
 form.addEventListener('submit', addTask);
 
 function addTask(e){
-    const li = document.createElement('li');
-    li.className = 'collection-item';
-    li.appendChild(document.createTextNode(taskInputFld.value));
-    const link = document.createElement('a');
-    link.className = 'delete-item secondary-content';
-    link.innerHTML = '<i class="fa fa-remove"></i>';
-    li.appendChild(link);
-    ulTasks.appendChild(li);
-    console.log(li);
-    // update items in local storage
+    if(taskInputFld.value !== ""){
+        const li = document.createElement('li');
+        li.className = 'collection-item';
+        li.appendChild(document.createTextNode(taskInputFld.value));
+        const link = document.createElement('a');
+        link.className = 'delete-item secondary-content';
+        link.innerHTML = '<i class="fa fa-remove"></i>';
+        li.appendChild(link);
+        ulTasks.appendChild(li);
+        console.log(li);
+        // update items in local storage
 
-    if(localStorage.getItem('tasks') === null)
-        tempTasks = [];
-    else tempTasks = JSON.parse(localStorage.getItem('tasks'));
-    tempTasks.push(taskInputFld.value);
-    localStorage.setItem('tasks', JSON.stringify(tempTasks));
+        if(localStorage.getItem('tasks') === null)
+            tempTasks = [];
+        else tempTasks = JSON.parse(localStorage.getItem('tasks'));
+        tempTasks.push(taskInputFld.value);
+        localStorage.setItem('tasks', JSON.stringify(tempTasks));
 
-    //end of update
-    taskInputFld.value = "";
+        //end of update
+        taskInputFld.value = "";
+    }
     e.preventDefault();
 }
 
@@ -41,7 +43,7 @@ function filterTasks(e){
     if(localStorage.getItem('tasks') === null)
         tempTasks = [];
     else {
-        tempTasks = JSON.parse(localStorage.getItem('tasks')).filter(task => task.includes(filterInputFld.value));
+        tempTasks = JSON.parse(localStorage.getItem('tasks')).filter(task => (task).toLowerCase().includes((filterInputFld.value).toLowerCase()));
         filteredTasks = tempTasks;
     }
 
