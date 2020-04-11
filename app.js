@@ -27,6 +27,7 @@ function addTask(e){
         //end of update
         taskInputFld.value = "";
     }
+    else alert('Въведи нещо в кутийката де :P');
     e.preventDefault();
 }
 
