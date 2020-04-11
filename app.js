@@ -67,5 +67,6 @@ ulTasks.addEventListener('click', deleteTask);
 
 function deleteTask(e){
     if(e.target.className === 'fa fa-remove')
-        e.target.parentNode.parentNode.remove();
+        if(confirm('Are you sure you want to delete this task?'))
+            e.target.parentNode.parentNode.remove();
 }
