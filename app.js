@@ -1,12 +1,35 @@
-const form = document.querySelector('.task-form');
-const ulTasks = document.querySelector('ul.collection');
-const taskInputFld = document.querySelector('#task');
 let tempTasks;
 
+window.addEventListener('load', init);
+
+function init(e){
+    let tasks = JSON.parse(localStorage.getItem('tasks'));
+    const ulTasks = document.createElement('ul');
+    ulTasks.className = 'collection';
+
+    if(tasks){
+        const oldUl = document.querySelector('.collection');
+        for(task of tasks){
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            li.className = 'collection-item';
+            li.appendChild(document.createTextNode(task));
+            link.className = 'delete-item secondary-content';
+            link.innerHTML = '<i class="fa fa-remove"></i>';
+            li.appendChild(link);
+            ulTasks.appendChild(li);
+        }
+        oldUl.parentElement.replaceChild(ulTasks,oldUl);
+    }
+}
+
+const form = document.querySelector('.task-form');
 form.addEventListener('submit', addTask);
 
 function addTask(e){
+    const taskInputFld = document.querySelector('#task');
     if(taskInputFld.value !== ""){
+        const ulTasks = document.querySelector('ul.collection');
         const li = document.createElement('li');
         li.className = 'collection-item';
         li.appendChild(document.createTextNode(taskInputFld.value));
@@ -64,10 +87,32 @@ function filterTasks(e){
     ulParentEl.insertBefore(ulTasks, nextSiblEl);
 }
 
-ulTasks.addEventListener('click', deleteTask);
+document.querySelector('ul.collection').addEventListener('click', deleteTask);
 
 function deleteTask(e){
     if(e.target.className === 'fa fa-remove')
-        if(confirm('Are you sure you want to delete this task?'))
+        if(confirm('Are you sure you want to delete this task?')){
+            if(localStorage.getItem('tasks') !== null){
+                let allTasks = JSON.parse(localStorage.getItem('tasks'));//e.target.parentNode.parentNode.textContent);
+                allTasks.splice(allTasks.findIndex(task => task === e.target.parentNode.parentNode.textContent),1);
+                localStorage.setItem('tasks', JSON.stringify(allTasks));
+            }
             e.target.parentNode.parentNode.remove();
+        }
 }
+
+let clearBtn = document.querySelector('.clear-tasks');
+clearBtn.addEventListener('click', clearTasks);
+
+function clearTasks(e){
+    const ulEl = document.querySelector('ul.collection');
+    const ulParentEl = ulEl.parentNode;
+    const nextSiblEl = ulEl.nextElementSibling;
+    ulEl.remove();
+    const ulTasks = document.createElement('ul');
+    ulTasks.className = 'collection'
+    ulParentEl.insertBefore(ulTasks, nextSiblEl);
+    
+    localStorage.clear();
+}
+//console.log(clearBtn);
